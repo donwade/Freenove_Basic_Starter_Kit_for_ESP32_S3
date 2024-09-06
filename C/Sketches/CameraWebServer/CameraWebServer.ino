@@ -41,6 +41,7 @@ void startCameraServer();
 
 void setup() {
   Serial.begin(115200);
+  delay(4000);
   Serial.setDebugOutput(true);
   Serial.println();
 
@@ -70,7 +71,7 @@ void setup() {
   config.fb_location = CAMERA_FB_IN_PSRAM;
   config.jpeg_quality = 12;
   config.fb_count = 1;
-  
+
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   // for larger pre-allocated frame buffer.
   if(psramFound()){
@@ -92,10 +93,11 @@ void setup() {
 
   sensor_t * s = esp_camera_sensor_get();
   // initial sensors are flipped vertically and colors are a bit saturated
+  s->set_hmirror(s, 1); // flip left right
   s->set_vflip(s, 1); // flip it back
   s->set_brightness(s, 1); // up the brightness just a bit
   s->set_saturation(s, 0); // lower the saturation
-  
+
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
 
