@@ -142,6 +142,10 @@ static int set_window(sensor_t *sensor, ov2640_sensor_mode_t mode, int offset_x,
     ov2640_clk_t c;
     c.reserved = 0;
 
+    ESP_LOGI(TAG,
+        "ov2640_sensor_mode_t %d, offset_x %d, offset_y %d, max_x %d, max_y %d, w %d, h %d",
+        mode, offset_x, offset_y, max_x, max_y, w, h);
+
     max_x /= 4;
     max_y /= 4;
     w /= 4;
@@ -224,7 +228,13 @@ static int set_framesize(sensor_t *sensor, framesize_t framesize)
 
     sensor->status.framesize = framesize;
 
-
+    ESP_LOGI(TAG, "frame enum = %d", framesize);
+    ESP_LOGI(TAG, "w = %d, h = %d", w, h);
+    ESP_LOGI(TAG, "aspect = %d", ratio);
+    ESP_LOGI(TAG, "max_x = %d\t max_y = %d", max_x, max_y);
+    ESP_LOGI(TAG, "offset_x = %d\t offset_y = %d", offset_x, offset_y);
+    ESP_LOGI(TAG, "ov2640_sensor_mode_t mode = %d", mode);
+    ESP_LOGI(TAG, "   --- check for change below ---  ");
 
     if (framesize <= FRAMESIZE_CIF) {
         mode = OV2640_MODE_CIF;
@@ -242,6 +252,11 @@ static int set_framesize(sensor_t *sensor, framesize_t framesize)
         offset_x /= 2;
         offset_y /= 2;
     }
+
+    ESP_LOGI(TAG, "max_x = %d\t  max_y = %d", max_x, max_y);
+    ESP_LOGI(TAG, "offset_x = %d\t offset_y = %d", offset_x, offset_y);
+    ESP_LOGI(TAG, "ov2640_sensor_mode_t mode = %d", mode);
+    ESP_LOGI(TAG, " ---- math complete ---- ");
 
     ret = set_window(sensor, mode, offset_x, offset_y, max_x, max_y, w, h);
     return ret;
@@ -489,6 +504,12 @@ static int set_reg(sensor_t *sensor, int reg, int mask, int value)
 
 static int set_res_raw(sensor_t *sensor, int startX, int startY, int endX, int endY, int offsetX, int offsetY, int totalX, int totalY, int outputX, int outputY, bool scale, bool binning)
 {
+
+    ESP_LOGI(TAG,
+        "startX %d, startY %d, endX %d, endY %d, offsetX %d, offsetY %d, totalX %d, totalY %d, outputX %d, outputY %d, scale %d, binning %d",
+        startX, startY, endX, endY, offsetX, offsetY, totalX, totalY, outputX, outputY, scale,
+        binning);
+
     return set_window(sensor, (ov2640_sensor_mode_t)startX, offsetX, offsetY, totalX, totalY, outputX, outputY);
 }
 
